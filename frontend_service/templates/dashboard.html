@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Crypto Oracle Dashboard</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+</head>
+
+<body>
+
+<nav>
+
+<a href="/">Dashboard</a>
+<a href="/market">Market</a>
+<a href="/system">System</a>
+
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Crypto Dashboard</h2>
+
+<label>Symbol</label>
+
+<select id="symbol"></select>
+
+<label>Interval</label>
+
+<select id="interval">
+
+<option value="1m">1m</option>
+<option value="5m">5m</option>
+<option value="15m">15m</option>
+<option value="30m">30m</option>
+<option value="1h">1h</option>
+<option value="1d">1d</option>
+
+</select>
+
+<button onclick="loadChart()">Load</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>Candle Details</h3>
+
+<div id="candleDetails">
+
+Time: - <br>
+Open: - <br>
+High: - <br>
+Low: - <br>
+Close: -
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div id="chart"></div>
+
+</div>
+
+</div>
+
+<script src="/static/dashboard.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+# python
+__pycache__/
+*.pyc
+*.pyo
+
+# virtual env
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# environment variables
+.env
+
+# mac
+.DS_Store
+
+# docker
+docker-compose.override.yml

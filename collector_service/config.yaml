@@ -1,0 +1,33 @@
+app:
+  name: crypto-data-collector
+  interval_seconds: 30
+
+app_candle:
+  name: crypto-candle-service
+
+collector:
+  provider: coingecko
+
+cryptos:
+  bitcoin:
+    symbol: BTC
+  ethereum:
+    symbol: ETH
+  solana:
+    symbol: SOL
+  ripple:
+    symbol: XRP
+  cardano:
+    symbol: ADA
+  dogecoin:
+    symbol: DOGE
+  avalanche-2:
+    symbol: AVAX
+  polkadot:
+    symbol: DOT
+  chainlink:
+    symbol: LINK
+
+logging:
+  level: INFO
+  file: logs/collector.log

@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: crypto-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  collector:
+    build: ./collector_service
+    container_name: collector-service
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+
+  aggregation:
+    build: ./aggregation_service
+    container_name: aggregation-service
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "8001:8001"
+
+  feature:
+    build: ./feature_service
+    container_name: feature-service
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "8002:8002"
+
+  api:
+    build: ./api_service
+    container_name: api-service
+    env_file:
+      - .env
+    depends_on:
+      - aggregation
+      - feature
+    ports:
+      - "8010:8010"
+
+  frontend:
+    build: ./frontend_service
+    container_name: frontend
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:
