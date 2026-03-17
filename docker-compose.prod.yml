@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: crypto-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  collector:
+    image: deadlights7865/crypto-collector
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  aggregation:
+    image: deadlights7865/crypto-aggregation
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+
+  feature:
+    image: deadlights7865/crypto-feature
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  api:
+    image: deadlights7865/crypto-api
+    restart: always
+    depends_on:
+      - aggregation
+      - feature
+    ports:
+      - "8010:8010"
+    env_file:
+      - .env
+
+  frontend:
+    image: deadlights7865/crypto-frontend
+    restart: always
+    ports:
+      - "8003:80"
+
+volumes:
+  postgres_data:
