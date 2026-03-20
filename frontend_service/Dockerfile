@@ -1,9 +1,15 @@
 FROM nginx:alpine
 
-# remove default nginx page
+# remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# clean default html
 RUN rm -rf /usr/share/nginx/html/*
 
-# copy HTML files (templates → root)
+# copy templates (HTML files)
 COPY templates/ /usr/share/nginx/html/
 
 # copy static files
