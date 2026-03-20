@@ -11,7 +11,7 @@ async def candles(symbol: str, interval: str = "1m", limit: int = 200):
     proxy to aggregation service
 
     """
-    url = f"{AGGREGATION_SERVICE}"+ "/candles"
+    url = f"{AGGREGATION_SERVICE}"+"/candles"
     params = {"symbol": symbol, "interval": interval, "limit": limit}
 
     return await proxy_request(url=url, params=params)
