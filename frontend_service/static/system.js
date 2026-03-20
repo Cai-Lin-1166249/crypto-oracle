@@ -1,43 +1,51 @@
-//const API_BASE = "http://localhost:8010/api"
-
-const API_BASE = "http://34.234.12.88:8010:8010/api"
+const API_BASE = "http://34.234.12.88:8010/api"
 
 async function loadSystem(){
 
     console.log("checking system status...")
 
-    const response = await fetch(`${API_BASE}/system`)
+    try {
 
-    const data = await response.json()
+        const response = await fetch(`${API_BASE}/system`)
 
-    console.log("system:", data)
+        const data = await response.json()
 
-    const tableBody = document.getElementById("systemBody")
+        console.log("system:", data)
 
-    tableBody.innerHTML = ""
+        const tableBody = document.getElementById("systemBody")
 
-    Object.keys(data).forEach(service => {
+        tableBody.innerHTML = ""
 
-        const status = data[service]
+        Object.keys(data).forEach(service => {
 
-        const row = document.createElement("tr")
+            const status = data[service]
 
-        const color =
-            status === "running" ? "green" : "red"
+            const row = document.createElement("tr")
 
-        row.innerHTML = `
-            <td>${service}</td>
-            <td style="color:${color}">
-                ${status}
-            </td>
-        `
+            const color =
+                status === "running" ? "green" : "red"
 
-        tableBody.appendChild(row)
+            row.innerHTML = `
+                <td>${service}</td>
+                <td style="color:${color}">
+                    ${status}
+                </td>
+            `
 
-    })
+            tableBody.appendChild(row)
+
+        })
+
+    } catch (err) {
+
+        console.error("system error:", err)
+
+        document.getElementById("systemBody").innerHTML =
+            `<tr><td colspan="2">Error loading system status</td></tr>`
+    }
 
 }
 
 loadSystem()
 
-setInterval(loadSystem,10000)
+setInterval(loadSystem, 10000)
