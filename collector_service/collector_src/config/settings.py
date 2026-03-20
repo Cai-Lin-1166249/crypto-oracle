@@ -15,6 +15,10 @@ class Settings:
         # application name
         self.app_name = config["app"]["name"]
 
+        self.provider = config["collector"]["provider"]
+
+        self.cryptos = config["cryptos"]
+
         # logging config
         self.logging_level = config["logging"]["level"]
         self.log_file = config["logging"]["file"]

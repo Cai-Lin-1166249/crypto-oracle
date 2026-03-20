@@ -1,7 +1,3 @@
-CREATE DATABASE crypto;
-
-\c crypto
-
 CREATE TABLE crypto_assets (
     id SERIAL PRIMARY KEY,
     symbol VARCHAR(10) UNIQUE NOT NULL,

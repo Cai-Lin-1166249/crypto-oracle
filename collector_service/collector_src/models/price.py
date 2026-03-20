@@ -18,11 +18,13 @@ class CryptoPrice(Base):
 
     __tablename__ = "crypto_prices"
 
+    __table_args__ = {'schema': 'public'}
+
     id = Column(Integer, primary_key=True)
 
     asset_id = Column(
         Integer,
-        ForeignKey("crypto_assets.id"),
+        ForeignKey("public.crypto_assets.id"),
         nullable=False
     )
 
@@ -35,8 +37,4 @@ class CryptoPrice(Base):
     asset = relationship(
         "CryptoAsset",
         back_populates="prices"
-    )
-
-    __table_args__ = (
-        UniqueConstraint("asset_id", "price_timestamp", name="unique_price_record"),
     )

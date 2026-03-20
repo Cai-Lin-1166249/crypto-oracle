@@ -12,6 +12,8 @@ class CryptoFeature(Base):
 
     __tablename__ = 'crypto_features'
 
+    __table_args__ = {'schema': 'public'}
+
     id = Column(Integer, primary_key=True)  # pk
 
     asset_id = Column(Integer, nullable=False)  # Reference to crypto_asset.id

@@ -5,6 +5,9 @@ from collector_src.scheduler.CollectorScheduler import CollectorScheduler
 from collector_src.services.asset_service import initialize_asset
 from collector_src.utils.logger import get_logger
 from collector_src.config.settings import Settings
+from collector_src.models.asset import CryptoAsset
+from collector_src.models.price import CryptoPrice
+
 
 logger = get_logger(__name__)
 app = FastAPI()

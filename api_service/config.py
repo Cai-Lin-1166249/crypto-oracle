@@ -1,4 +1,6 @@
-AGGREGATION_SERVICE = "http://localhost:8001"
-FEATURE_SERVICE = "http://localhost:8002"
-COLLECTOR_SERVICE = "http://localhost:8000"
-API_SERVICE = "http://localhost:8010"
+import os
+
+AGGREGATION_SERVICE = os.getenv('AGGREGATION_SERVICE')
+FEATURE_SERVICE = os.getenv('FEATURE_SERVICE')
+COLLECTOR_SERVICE = os.getenv('COLLECTOR_SERVICE')
+API_SERVICE = os.getenv("API_SERVICE")

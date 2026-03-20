@@ -15,6 +15,8 @@ class CryptoCandle1m(Base):
 
     __tablename__ = 'crypto_candles_1m'
 
+    __table_args__ = {'schema': 'public'}
+
     id = Column(Integer, primary_key=True)  # pk
 
     asset_id = Column(Integer, nullable=False)  # reference to table crypto_assets.assets_id

@@ -1,4 +1,7 @@
-const API_BASE = "http://localhost:8010/api"
+
+//const API_BASE = "http://localhost:8010/api"
+
+const API_BASE = "http://34.234.12.88:8010/api"
 
 let chart
 let candleSeries

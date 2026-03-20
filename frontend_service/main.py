@@ -8,7 +8,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 def dashboard():
-    return FileResponse("templates/dashboard.html")
+    return FileResponse("templates/index.html")
 
 @app.get("/market")
 def market():
