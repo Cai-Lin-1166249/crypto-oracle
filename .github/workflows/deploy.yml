@@ -1,4 +1,4 @@
-name: Deploy to AWS
+name: Selective Deploy to AWS
 
 on:
   push:
@@ -21,38 +21,75 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # ✅ ADD THIS STEP
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
     - name: Set tag
       run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-    - name: Build and Push Images
+    # Detect changes
+    - name: Detect changes
+      id: changes
+      run: |
+        echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_OUTPUT
+
+    # BUILD SERVICES SELECTIVELY
+    - name: Build API
+      if: contains(steps.changes.outputs.changed_files, 'api_service/')
       run: |
         docker buildx build --platform linux/amd64 \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-api:${{ env.TAG }} \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-api:latest \
           --push ./api_service
 
+    - name: Build Collector
+      if: contains(steps.changes.outputs.changed_files, 'collector_service/')
+      run: |
         docker buildx build --platform linux/amd64 \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-collector:${{ env.TAG }} \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-collector:latest \
           --push ./collector_service
 
+    - name: Build Aggregation
+      if: contains(steps.changes.outputs.changed_files, 'aggregation_service/')
+      run: |
         docker buildx build --platform linux/amd64 \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-aggregation:${{ env.TAG }} \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-aggregation:latest \
           --push ./aggregation_service
 
+    - name: Build Feature
+      if: contains(steps.changes.outputs.changed_files, 'feature_service/')
+      run: |
         docker buildx build --platform linux/amd64 \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-feature:${{ env.TAG }} \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-feature:latest \
           --push ./feature_service
 
+    - name: Build Frontend
+      if: contains(steps.changes.outputs.changed_files, 'frontend_service/')
+      run: |
         docker buildx build --platform linux/amd64 \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-frontend:${{ env.TAG }} \
           -t ${{ secrets.DOCKER_USERNAME }}/crypto-frontend:latest \
           --push ./frontend_service
 
+    # DEPLOY SELECTIVELY
+    - name: Set services
+      run: |
+        SERVICES=""
+
+        if [[ "${{ steps.changes.outputs.changed_files }}" == *"api_service/"* ]]; then SERVICES="$SERVICES api"; fi
+        if [[ "${{ steps.changes.outputs.changed_files }}" == *"frontend_service/"* ]]; then SERVICES="$SERVICES frontend"; fi
+        if [[ "${{ steps.changes.outputs.changed_files }}" == *"collector_service/"* ]]; then SERVICES="$SERVICES collector"; fi
+        if [[ "${{ steps.changes.outputs.changed_files }}" == *"aggregation_service/"* ]]; then SERVICES="$SERVICES aggregation"; fi
+        if [[ "${{ steps.changes.outputs.changed_files }}" == *"feature_service/"* ]]; then SERVICES="$SERVICES feature"; fi
+
+        echo "SERVICES=$SERVICES" >> $GITHUB_ENV
+        echo "Deploying: $SERVICES"
+
     - name: Deploy to EC2
+      if: env.SERVICES != ''
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -60,5 +97,5 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/crypto-oracle
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d
+          docker compose -f docker-compose.prod.yml pull $SERVICES
+          docker compose -f docker-compose.prod.yml up -d --no-deps $SERVICES
