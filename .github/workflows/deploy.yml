@@ -21,6 +21,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    # ✅ ADD THIS STEP
+    - name: Set tag
+      run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
     - name: Build and Push Images
       run: |
         docker buildx build --platform linux/amd64 \
