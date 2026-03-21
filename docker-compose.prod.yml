@@ -16,7 +16,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   collector:
-    image: deadlights7865/crypto-collector:v0.1
+    image: deadlights7865/crypto-collector:latest
     restart: always
     depends_on:
       - postgres
@@ -24,7 +24,7 @@ services:
       - .env
 
   aggregation:
-    image: deadlights7865/crypto-aggregation:v0.1
+    image: deadlights7865/crypto-aggregation:latest
     restart: always
     depends_on:
       - postgres
@@ -34,7 +34,7 @@ services:
       - .env
 
   feature:
-    image: deadlights7865/crypto-feature:v0.1
+    image: deadlights7865/crypto-feature:latest
     restart: always
     depends_on:
       - postgres
@@ -42,7 +42,7 @@ services:
       - .env
 
   api:
-    image: deadlights7865/crypto-api:v0.1
+    image: deadlights7865/crypto-api:latest
     restart: always
     depends_on:
       - aggregation
@@ -53,7 +53,7 @@ services:
       - .env
 
   frontend:
-    image: deadlights7865/crypto-frontend:v0.1
+    image: deadlights7865/crypto-frontend:latest
     restart: always
     ports:
       - "8003:80"
