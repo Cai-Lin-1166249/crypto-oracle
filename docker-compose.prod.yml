@@ -7,21 +7,29 @@ services:
     container_name: crypto-api
     ports:
       - "8010:8010"
+    env_file:
+      - .env
     restart: always
 
   collector:
     image: deadlights7865/crypto-collector:latest
     container_name: crypto-collector
+    env_file:
+      - .env
     restart: always
 
   aggregation:
     image: deadlights7865/crypto-aggregation:latest
     container_name: crypto-aggregation
+    env_file:
+      - .env
     restart: always
 
   feature:
     image: deadlights7865/crypto-feature:latest
     container_name: crypto-feature
+    env_file:
+      - .env
     restart: always
 
   frontend:
