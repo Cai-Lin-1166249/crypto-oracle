@@ -1,110 +1,32 @@
-name: Selective Deploy to AWS
+version: "3.9"
 
-on:
-  push:
-    branches:
-      - main
+services:
 
-jobs:
-  build-and-deploy:
+  api:
+    image: deadlights7865/crypto-api:latest
+    container_name: crypto-api
+    ports:
+      - "8010:8010"
+    restart: always
 
-    runs-on: ubuntu-latest
+  collector:
+    image: deadlights7865/crypto-collector:latest
+    container_name: crypto-collector
+    restart: always
 
-    steps:
+  aggregation:
+    image: deadlights7865/crypto-aggregation:latest
+    container_name: crypto-aggregation
+    restart: always
 
-    # 1️⃣ Checkout
-    - name: Checkout code
-      uses: actions/checkout@v3
+  feature:
+    image: deadlights7865/crypto-feature:latest
+    container_name: crypto-feature
+    restart: always
 
-    # 2️⃣ Docker login
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    # 3️⃣ Setup buildx (IMPORTANT)
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    # 4️⃣ Set SHA tag
-    - name: Set tag
-      run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-    # 5️⃣ Detect changed files
-    - name: Detect changes
-      id: changes
-      run: |
-        echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_OUTPUT
-
-    # 6️⃣ Decide which services to build/deploy
-    - name: Set services
-      run: |
-        SERVICES=""
-
-        if [[ "${{ steps.changes.outputs.changed_files }}" == *"api_service/"* ]]; then SERVICES="$SERVICES api"; fi
-        if [[ "${{ steps.changes.outputs.changed_files }}" == *"frontend_service/"* ]]; then SERVICES="$SERVICES frontend"; fi
-        if [[ "${{ steps.changes.outputs.changed_files }}" == *"collector_service/"* ]]; then SERVICES="$SERVICES collector"; fi
-        if [[ "${{ steps.changes.outputs.changed_files }}" == *"aggregation_service/"* ]]; then SERVICES="$SERVICES aggregation"; fi
-        if [[ "${{ steps.changes.outputs.changed_files }}" == *"feature_service/"* ]]; then SERVICES="$SERVICES feature"; fi
-
-        echo "SERVICES=$SERVICES" >> $GITHUB_ENV
-        echo "Changed services: $SERVICES"
-
-    # 7️⃣ Build API
-    - name: Build API
-      if: contains(steps.changes.outputs.changed_files, 'api_service/')
-      run: |
-        docker buildx build --platform linux/amd64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-api:${{ env.TAG }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-api:latest \
-          --push ./api_service
-
-    # 8️⃣ Build Collector
-    - name: Build Collector
-      if: contains(steps.changes.outputs.changed_files, 'collector_service/')
-      run: |
-        docker buildx build --platform linux/amd64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-collector:${{ env.TAG }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-collector:latest \
-          --push ./collector_service
-
-    # 9️⃣ Build Aggregation
-    - name: Build Aggregation
-      if: contains(steps.changes.outputs.changed_files, 'aggregation_service/')
-      run: |
-        docker buildx build --platform linux/amd64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-aggregation:${{ env.TAG }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-aggregation:latest \
-          --push ./aggregation_service
-
-    # 🔟 Build Feature
-    - name: Build Feature
-      if: contains(steps.changes.outputs.changed_files, 'feature_service/')
-      run: |
-        docker buildx build --platform linux/amd64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-feature:${{ env.TAG }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-feature:latest \
-          --push ./feature_service
-
-    # 1️⃣1️⃣ Build Frontend
-    - name: Build Frontend
-      if: contains(steps.changes.outputs.changed_files, 'frontend_service/')
-      run: |
-        docker buildx build --platform linux/amd64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-frontend:${{ env.TAG }} \
-          -t ${{ secrets.DOCKER_USERNAME }}/crypto-frontend:latest \
-          --push ./frontend_service
-
-    # 1️⃣2️⃣ Deploy ONLY changed services
-    - name: Deploy to EC2
-      if: env.SERVICES != ''
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd ~/crypto-oracle
-          docker compose -f docker-compose.prod.yml pull $SERVICES
-          docker compose -f docker-compose.prod.yml up -d --no-deps $SERVICES
+  frontend:
+    image: deadlights7865/crypto-frontend:latest
+    container_name: crypto-frontend
+    ports:
+      - "8003:80"
+    restart: always
