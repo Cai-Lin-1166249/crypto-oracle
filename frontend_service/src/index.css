@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont;
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+/* container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  gap: 30px;
+  padding: 16px 24px;
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
+}
+
+.navbar a {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  color: #38bdf8;
+}
+
+/* cards */
+.card {
+  background: #111827;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* controls */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: white;
+}
+
+button {
+  background: #38bdf8;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0ea5e9;
+}
+
+/* chart */
+.chart {
+  width: 100%;
+  height: 500px;
+}
+
+/* table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 10px;
+  background: #334155;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #334155;
+}
