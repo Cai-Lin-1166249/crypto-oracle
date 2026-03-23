@@ -31,19 +31,7 @@ jobs:
     - name: Detect changes
       id: changes
       run: |
-        git fetch --unshallow || true
-        git fetch origin main
-
-        if git rev-parse HEAD^ >/dev/null 2>&1; then
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
-        else
-          CHANGED_FILES=$(git ls-files)
-        fi
-
-        CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')
-        echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-
-        echo "Changed files: $CHANGED_FILES"
+        echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_OUTPUT
 
     # BUILD SERVICES SELECTIVELY
     - name: Build API
