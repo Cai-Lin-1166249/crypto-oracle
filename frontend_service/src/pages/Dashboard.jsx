@@ -172,7 +172,7 @@ export default function Dashboard() {
             value={interval}
             onChange={(e) => setIntervalValue(e.target.value)}
           >
-            <option value="1m">11m</option>
+            <option value="1m">1m</option>
             <option value="5m">5m</option>
             <option value="15m">15m</option>
             <option value="30m">30m</option>
