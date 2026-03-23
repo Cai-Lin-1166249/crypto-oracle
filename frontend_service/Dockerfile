@@ -13,7 +13,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*  # remove the default nginx page
 
 # copy the built output
-COPY --form=build /app/build /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
 
