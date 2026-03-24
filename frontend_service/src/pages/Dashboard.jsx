@@ -207,6 +207,7 @@ export default function Dashboard() {
         <h3>Candle Details</h3>
         {details ? (
           <div>
+            Time: {new Date(details.time * 1000).toLocaleString()} <br />
             Open: {details.open} <br />
             High: {details.high} <br />
             Low: {details.low} <br />
