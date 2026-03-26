@@ -29,23 +29,23 @@ Features:
     — Cached asset lookup (reduce DB pressure)
     — Structured logging
 
-Project Structure:
-    collector_service/
-    ├── collector_src/
-    │   ├── collectors/        # Data collectors (CoinGecko, etc.)
-    │   ├── services/          # Business logic (price persistence)
-    │   ├── scheduler/         # Job scheduler
-    │   ├── models/            # ORM models
-    │   ├── database/          # DB connection/session
-    │   ├── config/            # App configuration
-    │   └── utils/             # Logging & helpers
-    ├── sql/                   # Database schema (DDL)
-    ├── logs/                  # Runtime logs
-    ├── config.yaml            # Non-sensitive configuration
-    ├── main.py                # Application entry point
-    ├── Dockerfile
-    └── requirements.txt
-
+```text
+collector_service/
+├── collector_src/
+│   ├── collectors/     # Data collectors (CoinGecko, etc.)
+│   ├── services/       # Business logic (price persistence)
+│   ├── scheduler/      # Job scheduler
+│   ├── models/         # ORM models
+│   ├── database/       # DB connection/session
+│   ├── config/         # App configuration
+│   └── utils/          # Logging & helpers
+├── sql/                # Database schema (DDL)
+├── logs/               # Runtime logs
+├── config.yaml         # Non-sensitive configuration
+├── main.py             # Application entry point
+├── Dockerfile
+└── requirements.txt
+```
 
 How to start:
 
