@@ -78,9 +78,32 @@ CI/CD Pipeline:
         4. Zero manual deployment
 
 AWS Deployment:
+
     1. Hosted on AWS EC2
     2. Dockerized microservices
     3. Exposed ports:
         - API: 8010
         - Frontend: 8003
 
+Getting Started:
+
+    1. Clone Repository
+    2. Create .env: DATABASE_URL=postgresql://user:password@localhost:5432/crypto_db
+    3. Run locally: docker compose up --build
+    4. Access application: Frontend: http://localhost:8003
+
+Design Highlights:
+
+    1. Microservices Architecutre
+    2. Clean separation of concerns
+    3. Async data ingestion
+    4. Time-series data processing
+    5. Scalable deployment pipeline
+
+Future Improvements:
+    
+    - Redis Caching layer
+    - Message Queue for large data ingestion
+    - K8s Clusters (if necessary, container over 10)
+    - AI price prediction feature
+    
