@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 
 class FeatureScheduler:
     """
-    Scheduler class responsible for periodically generating techinical
+    Scheduler class responsible for periodically generating technical
     indicators from candle data.
     """
 
