@@ -1,18 +1,8 @@
 The aggregation is responsible for raw price data collected by the collector and transforming it into
 OHLC candlestick data, which is essential for charting, analytics and downstream services.
 
-Architecture: Collector Service → Raw Prices → Aggregation Service → Candles → Feature Service
+Architecture: Collector Service → Raw Prices → Aggregation Service → Feature Service
 
-Candlestick main attributes:
-    — Open → First price in the interval
-    — High → Highest price
-    — Low → Lowest price
-    — Close → Last price in the interval
-
-Features:
-    — Candlestick Generation
-    — Time-based aggregation (1m, 5m, 15m, 1h, 1day)
-    — Efficient batch processing
 
 Project Structure:
 
