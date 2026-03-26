@@ -45,12 +45,13 @@ class CollectorScheduler:
     def start(self):
         logger.info("Scheduler running at second 00 and 30")
 
+        #   register the job with cron trigger
         self.scheduler.add_job(
             self.collect,
             trigger="cron",
             second="0,30",
-            max_instances=1,
-            coalesce=True
+            max_instances=1,  # concurrent executions if a previous job has not finished
+            coalesce=True  # if the scheduler falls behind, execute immediately.
         )
 
         self.scheduler.start()

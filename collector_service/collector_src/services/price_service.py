@@ -21,7 +21,15 @@ async def save_prices(prices):
     """
     Data persistence.
     :arg
-    prices: list of normalized price records.
+    prices: list of normalized price records:
+        [
+            {
+                "coin_id": "bitcoin",
+                "price": 69999,
+                "timestamp": datetime,
+                "source": "coingecko"
+            }
+        ]
     """
     db = SessionLocal()
 
@@ -36,6 +44,7 @@ async def save_prices(prices):
                 logger.warning(f"Asset not found for {price}")
                 continue
 
+            # create an orm instance of crypto_price
             record = CryptoPrice(
                 asset_id=asset_id,
                 price=price["price"],
@@ -43,9 +52,11 @@ async def save_prices(prices):
                 price_timestamp=price["timestamp"]
             )
 
+            # stack the record for insertion
             db.add(record)
             inserted += 1
 
+        # commit all the records
         db.commit()
 
         logger.info(f"Saved {inserted} records")

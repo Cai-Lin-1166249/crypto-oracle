@@ -7,23 +7,15 @@ from collector_src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-"""
-CoinGeckoCollector
-The class is mainly used to collect coingecko currency prices from the CoinGecko API.
-
-Endpoint:
-    "https://api.coingecko.com/api/v3/simple/price"
-Returned format:
-    [
-        {
-            "symbol": "BTC",
-            "price": 67000,
-            "timestamp": datetime,
-            "source": "coingecko"
-        }
-    ]
-"""
 class CoinGeckoCollector(BaseCollector):
+    """
+    Implementation of the BaseCollector using CoinGecko API.
+
+    Responsible for:
+        - Calling external REST API.
+        - Formatting the raw data into internal format.
+        - Returning normalized data.
+    """
 
     BASE_URL = "https://api.coingecko.com/api/v3/simple/price"
 
@@ -46,16 +38,21 @@ class CoinGeckoCollector(BaseCollector):
 
         async with httpx.AsyncClient(timeout=10) as client:
 
+            # Call CoinGecko API
             response = await client.get(self.BASE_URL, params=params)
 
             if response.status_code != 200:
                 logger.error(f"CoinGecko API error: {response.status_code}")
                 return []
 
+            # Converts the data into Python dict
             data = response.json()
             # print(data)
+
+        # Transforming API response into internal schema
         prices = []
 
+        # Get the symbols from setting.yml
         for crypto in settings.cryptos:
 
             symbol = settings.cryptos[crypto]["symbol"]
