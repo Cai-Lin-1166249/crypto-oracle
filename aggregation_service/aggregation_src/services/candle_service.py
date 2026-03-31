@@ -55,31 +55,18 @@ INTERVAL_MAP = {
 
 
 def get_candles(asset_id: int, interval: str, limit: int = 200):
-    """
-    query aggregate candles for a given asset.
-
-    :param asset_id: asset_id fk to crypto_assets
-    :param interval: requested interval in 1m, 15m, 30m, 1h, 1d
-    :param limit: maximum number of candles to return
-    :return:
-    """
 
     minutes = INTERVAL_MAP.get(interval)
 
     if not minutes:
         raise ValueError("Unsupported interval")
 
-    # SQL query dynamically aggregates 1-minute candles into larger timeframes
-    # Example:
-    #   15m -> group 15 one-minute candles
-    #   1h -> group 60 one-minute candles
-    # The bucket calculation determine which interval each candle belongs to.
-    sql = f"""
+    # ✅ FIXED: use epoch-based bucketing (works for ALL intervals)
+    sql = """
     SELECT
-
-        date_trunc('hour', candle_time)
-        + floor(date_part('minute', candle_time) / {minutes})
-          * interval '{minutes} minute' AS time,
+        to_timestamp(
+            floor(extract(epoch from candle_time) / (60 * :minutes)) * (60 * :minutes)
+        ) AS time,
 
         (array_agg(open ORDER BY candle_time))[1] AS open,
         max(high) AS high,
@@ -103,13 +90,13 @@ def get_candles(asset_id: int, interval: str, limit: int = 200):
         text(sql),
         {
             "asset_id": asset_id,
-            "limit": limit
+            "limit": limit,
+            "minutes": minutes   # 👈 IMPORTANT (new param)
         }
     )
 
     candles = []
 
-    # convert database rows into dict
     for row in result:
         candles.append({
             "time": row.time,
