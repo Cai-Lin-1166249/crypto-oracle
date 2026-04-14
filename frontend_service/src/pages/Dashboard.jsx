@@ -202,7 +202,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 🔥 DETAILS */}
       <div className="card">
         <h3>Candle Details</h3>
         {details ? (
