@@ -51,7 +51,7 @@ export default function Dashboard() {
   const loadChart = async () => {
     try {
       const res = await API.get(
-        `/candles?symbol=${symbol}&interval=${interval}&limit=200`
+        `/candles?symbol=${symbol}&interval=${interval}&limit=2000`
       );
 
       const raw = res.data.reverse();
