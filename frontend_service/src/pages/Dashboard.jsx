@@ -11,7 +11,7 @@ export default function Dashboard() {
   const chartInstance = useRef(null);
 
   const [symbol, setSymbol] = useState("");
-  const [interval, setIntervalValue] = useState("1m");
+  const [interval, setIntervalValue] = useState("1h");
   const [assets, setAssets] = useState([]);
   const [details, setDetails] = useState(null);
 
